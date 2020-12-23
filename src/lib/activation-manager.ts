@@ -1,5 +1,6 @@
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Debugger } from './debugger';
 
 import { ObservableStack } from './observable-stack';
 import { Callback, Maybe } from './types';
@@ -15,6 +16,7 @@ export type ActivationOptions = {
 };
 
 export class ActivationManager<T extends ActivationOptions> {
+    private readonly debugger: Debugger;
     private label = '';
     private debug = false;
     private activationCount = 0;
@@ -29,21 +31,30 @@ export class ActivationManager<T extends ActivationOptions> {
     public afterDeactivation$ = new Subject();
 
     constructor(options?: ActivationManagerOptions) {
+        // Config debugger
         this.label = options && typeof options.label === 'string' ? options.label : '';
         this.debug = options && typeof options.debug === 'boolean' ? options.debug : false;
-        this.activationStack$ = new ObservableStack({
+        this.debugger = new Debugger({
             label: this.label,
+            enabled: this.debug,
+        });
+
+        this.activationStack$ = new ObservableStack({
+            label: `${this.label} Stack`,
             enabled: this.debug,
         });
         this.currentActivationId$ = this.activationStack$.peak();
         this.currentOptions$ = this.currentActivationId$.pipe(
-            map(v => {
-                return typeof v === 'symbol' ? this.optionsMap.get(v) : null;
+            map(activationId => {
+                const currentOptions = typeof activationId === 'symbol' ? this.optionsMap.get(activationId) : null;
+                this.debugger.debug(`Current options: `, currentOptions, activationId);
+                return currentOptions;
             }),
         );
     }
 
     activate(options: T, useId?: Symbol) {
+        this.debugger.debug('Activated');
         this.activationCount += 1;
         const label = !!this.label ? `${this.label}-${this.activationCount}` : undefined;
         const activationId = useId || Symbol(label);
