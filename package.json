@@ -1,19 +1,22 @@
 {
-	"name": "activation-manager",
-	"version": "1.0.0",
-	"description": "",
-	"main": "index.js",
-	"scripts": {
-		"start": "parcel index.html",
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
-	"devDependencies": {
-		"typescript": "^4.1.3"
-	},
-	"dependencies": {
-		"rxjs": "^6.6.3"
-	}
+    "name": "activation-manager",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "parcel index.html",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "typescript": "^4.1.3"
+    },
+    "dependencies": {
+        "rxjs": "^6.6.3"
+    },
+    "browserslist": [
+        "last 1 Chrome version"
+    ]
 }
